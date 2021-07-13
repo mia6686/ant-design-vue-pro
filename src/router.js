@@ -131,7 +131,6 @@ router.beforeEach((to, form, next) => {
   console.log(record)
   //设置条件判断 如果找到了我们就拿这个存储的这个权限去校验
   //如果是record并且不是check里面的record里面元信息的authority
-  console.log('!check(record.meta.authority): ',!check(record.meta.authority))
   if(record && !check(record.meta.authority)){
     console.log('11111111111111111111111')
     // 如果没有权限就跳转到登录页面或者403，就需要进行第二次判断他是否已经登录
