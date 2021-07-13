@@ -1,6 +1,8 @@
 import Vue from "vue";
 import Router from "vue-router";
 import findLast from 'lodash/findLast';
+//手动导入组件库的警示框的提示组件
+import {notification} from 'ant-design-vue'
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import Forbidden from "./views/403.vue";
@@ -128,20 +130,22 @@ router.beforeEach((to, form, next) => {
   //to就是即将去的路由，matched就是路由提供给我们的一个接口 ，我们可以再当前的字段里面获取到当前路由匹配到的所有信息，
   //我们要找到距离我们最近的authority
   const record = findLast(to.matched, record => record.meta.authority);
-  console.log(record)
   //设置条件判断 如果找到了我们就拿这个存储的这个权限去校验
   //如果是record并且不是check里面的record里面元信息的authority
   if(record && !check(record.meta.authority)){
-    console.log('11111111111111111111111')
     // 如果没有权限就跳转到登录页面或者403，就需要进行第二次判断他是否已经登录
     // 如果没有登录的话那就跳转到我们的登录页面
         //加一个条件判断 防止一直出现下一步的操作 ， 意思就是如果没有登录并且不是登录页面，那下一步就必须跳转到登录页面进行登录
     if(!isLogin() && to.path !== '/user/login'){
-      console.log('222222222222222222')
       next({
         path: '/user/login'
       })
     }else if(to.path !== '/403'){  //如果已经登录了并且不是403页面 那就跳转到403页面去 需要配置403的路由
+      //警示信息提示
+      notification.error({
+        message: "403",
+        description: "你没有权限访问，请联系管理员咨询"
+      });
       next({
         path: '/403'
       })

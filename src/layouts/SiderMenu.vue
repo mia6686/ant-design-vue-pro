@@ -16,6 +16,8 @@
 </template>
 <script>
 import SubMenu from "../layouts/SubMenu.vue";
+import { check } from "../utils/auth";
+
 export default {
     props: {
         theme: {
@@ -52,7 +54,11 @@ export default {
         //回调函数的方法 用来判断一级二级三级菜单的显示
         getMenuData(routes = [], parentKeys = [], selectedKey) {
             const menuData = [];
-            routes.forEach((item) => {
+            for (let item of routes) {
+                //需要判断一下有没有信息 然后进行校验
+                if (item.meta && item.meta.authority && !check(item.meta.authority)) {
+                    break;
+                }
                 if (item.name && !item.hideInMenu) {
                     //父级菜单
                     this.openKeysMap[item.path] = parentKeys;
@@ -69,7 +75,7 @@ export default {
                 } else if (!item.hideInMenu && !item.hideChildrenInMenu && item.children) {
                     menuData.push(...this.getMenuData(item.children));
                 }
-            });
+            }
             return menuData;
         },
     },
