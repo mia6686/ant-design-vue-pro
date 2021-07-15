@@ -1,5 +1,6 @@
 <template>
     <!-- 需要在这里把form传递过去 -->
+    <a-form-model :layout="form.layout" :model="form" v-bind="formItemLayout" :form="form">
     <a-form :layout="form.layout" :model="form" v-bind="formItemLayout" :form="form">
         <a-form-item label="Form Layout">
             <a-radio-group v-model="form.layout">
