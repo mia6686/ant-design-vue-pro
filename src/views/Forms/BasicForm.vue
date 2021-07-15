@@ -1,7 +1,7 @@
 <template>
     <!-- 需要在这里把form传递过去 -->
-    <a-form-model :layout="form.layout" :model="form" v-bind="formItemLayout" :form="form">
-        <a-form-model-item label="Form Layout">
+    <a-form :layout="form.layout" :model="form" v-bind="formItemLayout" :form="form">
+        <a-form-item label="Form Layout">
             <a-radio-group v-model="form.layout">
                 <a-radio-button value="horizontal">
                     Horizontal
@@ -13,23 +13,23 @@
                     Inline
                 </a-radio-button>
             </a-radio-group>
-        </a-form-model-item>
+        </a-form-item>
         <!-- validateStatus="error" help="必须大于5个字符" 这个代码的意思是自动去校验我们自己定义的规则 在文档可查询 我们希望在用户输入的时候提示 所以需要在data里面去定义 -->
-        <!-- 当我们是自动校验的时候 就不需要在a-form-model-item这里面写这个代码了:validateStatus="fieldAStatus" :help="fieldAHelp" -->
-        <a-form-model-item label="Field A">
+        <!-- 当我们是自动校验的时候 就不需要在a-form-item这里面写这个代码了:validateStatus="fieldAStatus" :help="fieldAHelp" -->
+        <a-form-item label="Field A">
             <!-- 也不能直接绑定fieldA这个值 -->
             <!-- 要用到v-decorator这个指令，接收是一个数组 ，他有两个参数 第一个是需要监听的名称， 第二个是 传递的初始值， 配置的规则 （必填写的required，最小字段6，提示message）， -->
             <a-input v-decorator="['fieldA', { initialValue: fieldA, rules: [{ required: true, min: 6, message: '必须大于5个字符' }] }]" placeholder="input placeholder" />
-        </a-form-model-item>
-        <a-form-model-item label="Field B">
+        </a-form-item>
+        <a-form-item label="Field B">
             <a-input v-decorator="['fieldB']" placeholder="input placeholder" />
-        </a-form-model-item>
-        <a-form-model-item :wrapper-col="buttonItemLayout.wrapperCol">
+        </a-form-item>
+        <a-form-item :wrapper-col="buttonItemLayout.wrapperCol">
             <a-button type="primary" @click="handleSubmit">
                 Submit
             </a-button>
-        </a-form-model-item>
-    </a-form-model>
+        </a-form-item>
+    </a-form>
 </template>
 <script>
 export default {
@@ -44,7 +44,7 @@ export default {
             //自动校验的时候这两个数据也不要了
             // fieldAStatus: "",
             // fieldAHelp: "",
-            form: {
+            formLayout: {
                 layout: "horizontal",
             },
         };
@@ -63,7 +63,7 @@ export default {
     // },
     computed: {
         formItemLayout() {
-            const { layout } = this.form;
+            const { layout } = this.formLayout;
             return layout === "horizontal"
                 ? {
                       labelCol: { span: 4 },
@@ -72,7 +72,7 @@ export default {
                 : {};
         },
         buttonItemLayout() {
-            const { layout } = this.form;
+            const { layout } = this.formLayout;
             return layout === "horizontal"
                 ? {
                       wrapperCol: { span: 14, offset: 4 },
