@@ -1,5 +1,6 @@
 <template>
-    <a-form-model :layout="form.layout" :model="form" v-bind="formItemLayout">
+    <!-- 需要在这里把form传递过去 -->
+    <a-form-model :layout="form.layout" :model="form" v-bind="formItemLayout" :form="form">
         <a-form-model-item label="Form Layout">
             <a-radio-group v-model="form.layout">
                 <a-radio-button value="horizontal">
@@ -14,11 +15,14 @@
             </a-radio-group>
         </a-form-model-item>
         <!-- validateStatus="error" help="必须大于5个字符" 这个代码的意思是自动去校验我们自己定义的规则 在文档可查询 我们希望在用户输入的时候提示 所以需要在data里面去定义 -->
-        <a-form-model-item label="Field A" :validateStatus="fieldAStatus" :help="fieldAHelp">
-            <a-input v-model="fieldA" placeholder="input placeholder" />
+        <!-- 当我们是自动校验的时候 就不需要在a-form-model-item这里面写这个代码了:validateStatus="fieldAStatus" :help="fieldAHelp" -->
+        <a-form-model-item label="Field A">
+            <!-- 也不能直接绑定fieldA这个值 -->
+            <!-- 要用到v-decorator这个指令，接收是一个数组 ，他有两个参数 第一个是需要监听的名称， 第二个是 传递的初始值， 配置的规则 （必填写的required，最小字段6，提示message）， -->
+            <a-input v-decorator="['fieldA', { initialValue: fieldA, rules: [{ required: true, min: 6, message: '必须大于5个字符' }] }]" placeholder="input placeholder" />
         </a-form-model-item>
         <a-form-model-item label="Field B">
-            <a-input v-model="fieldB" placeholder="input placeholder" />
+            <a-input v-decorator="['fieldB']" placeholder="input placeholder" />
         </a-form-model-item>
         <a-form-model-item :wrapper-col="buttonItemLayout.wrapperCol">
             <a-button type="primary" @click="handleSubmit">
@@ -30,28 +34,33 @@
 <script>
 export default {
     data() {
+        //现在通过动态去更改AB监听的数据
+        //首先创建一个form实例  this.$form字main里面通过vue.use传递使用 ，这里面传递一个this是在createForm调用的时候用到,可以直接更新我们数据
+        this.form = this.$form.createForm(this);
         return {
+            //动态改变输入框提示
+            fieldA: "hello", //自动校验的时候给A一个hello初始值
+            fieldB: "",
+            //自动校验的时候这两个数据也不要了
+            // fieldAStatus: "",
+            // fieldAHelp: "",
             form: {
                 layout: "horizontal",
-                //动态改变输入框提示
-                fieldA: "",
-                fieldB: "",
-                fieldAStatus: "",
-                fieldAHelp: "必须大于5个字符",
             },
         };
     },
     //需要对这个fieldA进行监听状态的改变并且判断赋值
-    watch: {
-        fieldA(val) {
-            if (val.length <= 5) {
-                this.fieldAStatus = "error";
-                this.fieldAHelp = "必须大于5个字符";
-            } else {
-                (this.fieldAStatus = ""), (this.fieldAHelp = "");
-            }
-        },
-    },
+    //在自动校验的时候也不需要监听
+    // watch: {
+    //     fieldA(val) {
+    //         if (val.length <= 5) {
+    //             this.fieldAStatus = "error";
+    //             this.fieldAHelp = "必须大于5个字符";
+    //         } else {
+    //             (this.fieldAStatus = ""), (this.fieldAHelp = "");
+    //         }
+    //     },
+    // },
     computed: {
         formItemLayout() {
             const { layout } = this.form;
@@ -73,6 +82,12 @@ export default {
     },
     methods: {
         handleSubmit() {
+            //在自动校验的时候还需要添加一个this和第一个if条件
+            this.form.validateFields((err, values) => {
+                if (!err) {
+                    console.log(values);
+                }
+            });
             if (this.fieldA.length <= 5) {
                 this.fieldAStatus = "error";
                 this.fieldAHelp = "必须大于5个字符";
