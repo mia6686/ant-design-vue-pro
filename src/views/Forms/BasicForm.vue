@@ -1,8 +1,8 @@
 <template>
     <!-- 需要在这里把form传递过去 -->
-    <a-form :layout="form.layout" :model="form" v-bind="formItemLayout" :form="form">
+    <a-form :layout="formLayout.layout" :model="form" v-bind="formItemLayout" :form="form">
         <a-form-item label="Form Layout">
-            <a-radio-group v-model="form.layout">
+            <a-radio-group v-model="formLayout.layout">
                 <a-radio-button value="horizontal">
                     Horizontal
                 </a-radio-button>
@@ -49,6 +49,12 @@ export default {
             },
         };
     },
+    //通过的接口返回过来的数据之后，如何动态的去改变我们的form表单的值，form提供的API去改变
+    mounted() {
+        setTimeout(() => {
+            this.form.setFieldsValue({ fieldA: "hello world" });
+        }, 3000);
+    },
     //需要对这个fieldA进行监听状态的改变并且判断赋值
     //在自动校验的时候也不需要监听
     // watch: {
@@ -86,6 +92,9 @@ export default {
             this.form.validateFields((err, values) => {
                 if (!err) {
                     console.log(values);
+                    //我们需要同步给我们的原始数据 校验通过了 给后台发送请求 ，后台也通过校验了，就可以同步给其他组件使用了
+                    // this.fieldA = values.fieldA;  //表单越来越大的情况下的话 我们可以更加简便的写法如下
+                    Object.assign(this, values); //可以直接赋值  这样就可以直接同步到AB了
                 }
             });
             if (this.fieldA.length <= 5) {
