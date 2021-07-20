@@ -7,7 +7,8 @@ module.exports = {
                     if(req.headers.accept.indexOf("html") !== -1) {
                         console.log("Skipping proxy for browser request.")
                         return "/index.html";
-                    }else{
+                        //这里的if条件是判断当mock不是none的时候才执行下面的语句
+                    }else if(process.nextTick.MOCK !== "none"){
                         const name = req.path
                         .split("/api/")[1]
                         .split("/")

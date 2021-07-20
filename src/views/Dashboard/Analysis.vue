@@ -8,7 +8,9 @@
 import random from "lodash/random";
 import Chart from "../../components/Chart.vue";
 //使用mock模拟数据的时候需要先引入axios
-import axios from "axios";
+// import axios from "axios";  //封装的不需要使用这个axios
+//需要引入进来这个二次封装的接口
+import request from "../../utils/request";
 
 export default {
     data() {
@@ -54,26 +56,33 @@ export default {
     methods: {
         //接收数据名
         getChartData() {
-            axios.get("/api/dashboard/chart", { params: { ID: 12345 } }).then((response) => {
-                this.chartOption = {
-                    title: {
-                        text: "Echart 入门示例",
-                    },
-                    tooltip: {},
-                    xAxis: {
-                        data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
-                    },
-                    yAxis: {},
-                    series: [
-                        {
-                            name: "销量",
-                            type: "bar",
-                            // data: [5, 20, 36, 10, 10, 20], 换成接收到的数据
-                            data: response.data,
+            //封装好之后就可以拿过来使用这个request了 也不需要去看这个data的数据是怎样的
+            request({
+                url: "/api/dashboard/chart",
+                method: "get",
+                params: { ID: 12345 },
+            })
+                // axios.get("/api/dashboard/chart", { params: { ID: 12345 } })
+                .then((response) => {
+                    this.chartOption = {
+                        title: {
+                            text: "Echart 入门示例",
                         },
-                    ],
-                };
-            });
+                        tooltip: {},
+                        xAxis: {
+                            data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
+                        },
+                        yAxis: {},
+                        series: [
+                            {
+                                name: "销量",
+                                type: "bar",
+                                // data: [5, 20, 36, 10, 10, 20], 换成接收到的数据
+                                data: response.data,
+                            },
+                        ],
+                    };
+                });
         },
     },
     //使用之后需要进行销毁

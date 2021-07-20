@@ -4,14 +4,23 @@
     "private": true,
     "scripts": {
         "serve": "vue-cli-service serve",
+        "serve:no-mock": "cross-env MOCK=none vue-cli-service serve",
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
         "test:e2e": "vue-cli-service test:e2e",
         "test:unit": "vue-cli-service test:unit"
     },
+    "scripts-info": {
+        "serve": "运行生产环境服务器",
+        "serve:no-mock": "安装了cross-env插件 无论是windows系统还是ios系统都可以使用",
+        "build": "把process.env.NODE_ENV设置为'production'",
+        "lint": "vue-cli-service lint",
+        "test:e2e": "vue-cli-service test:e2e",
+        "test:unit": "vue-cli-service test:unit"
+    },
     "dependencies": {
-        "@vue/babel-helper-vue-jsx-merge-props": "^1.0.0-beta.2",
-        "@vue/babel-preset-jsx": "^1.0.0-beta.2",
+        "@vue/babel-helper-vue-jsx-merge-props": "^1.2.1",
+        "@vue/babel-preset-jsx": "^1.2.4",
         "ant-design-vue": "^1.7.6",
         "axios": "^0.21.1",
         "echarts": "^5.1.2",
@@ -36,6 +45,7 @@
         "babel-core": "7.0.0-bridge.0",
         "babel-eslint": "^10.0.1",
         "babel-jest": "^23.6.0",
+        "cross-env": "^7.0.3",
         "eslint": "^5.8.0",
         "eslint-plugin-vue": "^5.0.0",
         "less": "^3.0.4",

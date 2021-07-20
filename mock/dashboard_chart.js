@@ -9,7 +9,7 @@ function chart(method){
         //默认是GET请求方式
         case "GET":
             //假设的数据
-            res = [23, 44, 53, 23, 67, 12];
+            res = [100, 44, 53, 23, 67, 12];
             //退出
             break;
         //默认值 空
