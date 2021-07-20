@@ -22,8 +22,13 @@
             <a-input v-decorator="['fieldA', { initialValue: fieldA, rules: [{ required: true, min: 6, message: '必须大于5个字符' }] }]" placeholder="input placeholder" />
         </a-form-item>
         <a-form-item label="Field B">
-            <a-input v-decorator="['fieldB']" placeholder="input placeholder" />
+            <a-input v-decorator="['fieldB', { initialValue: fieldB, rules: [{ required: true, pattern: /^[0-9]\d*$/, message: '请输入0-9的数字' }] }]" placeholder="input placeholder" />
         </a-form-item>
+        <div>
+            <input type="text" v-model="bangding" class="miainput" />
+            <div v-if="isErr">{{ msg }}</div>
+            <div @click="dianji">aaa</div>
+        </div>
         <a-form-item :wrapper-col="buttonItemLayout.wrapperCol">
             <a-button type="primary" @click="handleSubmit">
                 Submit
@@ -47,6 +52,9 @@ export default {
             formLayout: {
                 layout: "horizontal",
             },
+            bangding: "",
+            isErr: true,
+            msg: "",
         };
     },
     //通过的接口返回过来的数据之后，如何动态的去改变我们的form表单的值，form提供的API去改变
@@ -54,6 +62,9 @@ export default {
         setTimeout(() => {
             this.form.setFieldsValue({ fieldA: "hello world" });
         }, 3000);
+        // setTimeout(() => {
+        //     this.form.setFieldsValue({ fieldB: "ha xixixi" });
+        // }, 3000);
     },
     //需要对这个fieldA进行监听状态的改变并且判断赋值
     //在自动校验的时候也不需要监听
@@ -100,11 +111,24 @@ export default {
             if (this.fieldA.length <= 5) {
                 this.fieldAStatus = "error";
                 this.fieldAHelp = "必须大于5个字符";
-            } else {
-                console.log({
-                    fieldA: this.fieldA,
-                    fieldB: this.fieldB,
-                });
+            }
+        },
+        dianji() {
+            var miainputtwo = document.getElementsByClassName("miainput");
+            console.log(miainputtwo);
+            console.log(this.bangding);
+            this.msg = "";
+            if (!this.bangding.match(/^[0-9]*$/) && this.bangding.length < 3) {
+                this.msg = "请输入0-9的数字且不能小于3个字符";
+                return;
+            }
+            if (!this.bangding.match(/^[0-9]*$/)) {
+                this.msg = "请输入0-9的数字";
+                return;
+            }
+            if (this.bangding.length < 3) {
+                this.msg = "不能小于3个字符";
+                return;
             }
         },
     },
